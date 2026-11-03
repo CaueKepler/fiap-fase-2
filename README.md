@@ -14,13 +14,13 @@
 
 | Entregável | Onde está |
 |---|---|
-| Notebook com o pipeline completo, executado, com as saídas | [`notebooks/NexusAI_techfase2.ipynb`](fiap-fase2-finalizado-3-11-main/notebooks/NexusAI_techfase2.ipynb) |
+| Notebook com o pipeline completo, executado, com as saídas | [`notebooks/NexusAI_techfase2.ipynb`](notebooks/NexusAI_techfase2.ipynb) |
 | Vídeo de apresentação | 🎥 [YouTube](https://youtu.be/K6rO7j4-eNQ) · [Google Drive](https://drive.google.com/file/d/1NA3KnVo0xa5aAwIbCsTkw-QhkDqZEccO/view?usp=drivesdk) |
-| Código separado por camada · mapa do notebook | [`src/`](fiap-fase2-finalizado-3-11-main/src/) · [`docs/mapa_do_notebook.md`](fiap-fase2-finalizado-3-11-main/docs/mapa_do_notebook.md) |
-| Arquitetura | [`docs/arquitetura.png`](fiap-fase2-finalizado-3-11-main/docs/arquitetura.png) · em SVG, para ampliar sem perder qualidade: [`docs/arquitetura.svg`](fiap-fase2-finalizado-3-11-main/docs/arquitetura.svg) |
-| Evidências de execução (16 prints + preços do BigQuery) | [`evidencias/`](fiap-fase2-finalizado-3-11-main/evidencias/) |
-| Dataset da Gold para a Fase 3 (Parquet e CSV das 6 tabelas, execução `20261024_070829`) | [`dados_gold/gold_export.zip`](fiap-fase2-finalizado-3-11-main/dados_gold/gold_export.zip) |
-| Apêndices · guia de execução | [`docs/apendices.md`](fiap-fase2-finalizado-3-11-main/docs/apendices.md) · [`docs/guia_de_execucao.md`](fiap-fase2-finalizado-3-11-main/docs/guia_de_execucao.md) |
+| Código separado por camada · mapa do notebook | [`src/`](src/) · [`docs/mapa_do_notebook.md`](docs/mapa_do_notebook.md) |
+| Arquitetura | [`docs/arquitetura.png`](docs/arquitetura.png) · em SVG, para ampliar sem perder qualidade: [`docs/arquitetura.svg`](docs/arquitetura.svg) |
+| Evidências de execução (16 prints + preços do BigQuery) | [`evidencias/`](evidencias/) |
+| Dataset da Gold para a Fase 3 (Parquet e CSV das 6 tabelas, execução `20261024_070829`) | [`dados_gold/gold_export.zip`](dados_gold/gold_export.zip) |
+| Apêndices · guia de execução | [`docs/apendices.md`](docs/apendices.md) · [`docs/guia_de_execucao.md`](docs/guia_de_execucao.md) |
 
 ## Resumo
 
@@ -44,7 +44,7 @@ O **Compromisso Nacional Criança Alfabetizada** quer que toda criança saiba le
 
 ## 2. Arquitetura
 
-![Figura 1: arquitetura do pipeline](fiap-fase2-finalizado-3-11-main/docs/arquitetura.png)
+![Figura 1: arquitetura do pipeline](docs/arquitetura.png)
 
 Seguimos a **Arquitetura Medalhão**:
 
@@ -55,7 +55,7 @@ Seguimos a **Arquitetura Medalhão**:
 | **Gold** | 6 tabelas analíticas, mais 4 de streaming (`streaming_*`, seção 6). A coluna `origem` (`oficial` ou `simulado`) existe em todas | Refeita a cada execução |
 | **quality_reports** | Conferências, métricas, execuções, alertas e eventos rejeitados | Acumula todas as execuções |
 
-Detalhes de gravação: [Apêndice A](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-a-como-cada-camada-é-gravada).
+Detalhes de gravação: [Apêndice A](docs/apendices.md#apêndice-a-como-cada-camada-é-gravada).
 
 | Tabela da Gold | Pergunta que responde | Linhas |
 |---|---|---|
@@ -66,13 +66,13 @@ Detalhes de gravação: [Apêndice A](fiap-fase2-finalizado-3-11-main/docs/apend
 | `desigualdade_regional` | Como as cidades se distribuem por região e estado? | 62 |
 | `base_modelagem` | Dados prontos para treinar o modelo da Fase 3 | 5.500 |
 
-As seis entidades do enunciado são usadas: `uf` e as três tabelas de meta entram em `meta_vs_resultado` e `evolucao_temporal`; `municipio` entra em todas as tabelas municipais; `alunos` entra em `indicador_municipio` e `validacao_taxa`. Atenção: nem todas as colunas de distância usam o mesmo sinal ([Apêndice F](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-f-detalhes-da-gold-e-da-modelagem)).
+As seis entidades do enunciado são usadas: `uf` e as três tabelas de meta entram em `meta_vs_resultado` e `evolucao_temporal`; `municipio` entra em todas as tabelas municipais; `alunos` entra em `indicador_municipio` e `validacao_taxa`. Atenção: nem todas as colunas de distância usam o mesmo sinal ([Apêndice F](docs/apendices.md#apêndice-f-detalhes-da-gold-e-da-modelagem)).
 
 | Ferramenta | Para que serve | Por que |
 |---|---|---|
 | Google BigQuery (Sandbox) | Guardar e processar as três camadas | Os dados de origem já estão lá; o Sandbox é gratuito |
 | Google Colab | Rodar o notebook | Gratuito e sem instalação |
-| Python 3 ([`requirements.txt`](fiap-fase2-finalizado-3-11-main/requirements.txt)) | Fluxo, regras de qualidade e exportação da Gold | Linguagem do curso |
+| Python 3 ([`requirements.txt`](requirements.txt)) | Fluxo, regras de qualidade e exportação da Gold | Linguagem do curso |
 | Apache Kafka 3.7.0 (`kafka-python-ng`) | Simular a chegada de eventos | Sobe dentro do Colab, sem servidor externo |
 | Discord (webhook) | Avisar quando o pipeline falha | Aviso imediato, sem infraestrutura extra |
 
@@ -80,7 +80,7 @@ Tudo o que aparece aqui foi implementado e executado. O que não foi feito está
 
 ## 3. Roteiro do notebook
 
-Ordem das etapas: **Configuração** (você cola o ID do projeto; é a única célula que edita) → **1 Ambiente** → **2 Bronze** → **3 Silver** → **4 Gold** (inclui exportação Parquet/CSV e 5 gráficos dos resultados, na 4.9) → **5 Diário e custos** → **6 Streaming** → **7 Falha de propósito**. A execução termina em erro na Etapa 7, de propósito: é a demonstração de que a validação para o pipeline. O mapa completo, com etapa, camada e arquivo de `src/`, está em [`docs/mapa_do_notebook.md`](fiap-fase2-finalizado-3-11-main/docs/mapa_do_notebook.md).
+Ordem das etapas: **Configuração** (você cola o ID do projeto; é a única célula que edita) → **1 Ambiente** → **2 Bronze** → **3 Silver** → **4 Gold** (inclui exportação Parquet/CSV e 5 gráficos dos resultados, na 4.9) → **5 Diário e custos** → **6 Streaming** → **7 Falha de propósito**. A execução termina em erro na Etapa 7, de propósito: é a demonstração de que a validação para o pipeline. O mapa completo, com etapa, camada e arquivo de `src/`, está em [`docs/mapa_do_notebook.md`](docs/mapa_do_notebook.md).
 
 ## 4. Decisões
 
@@ -92,7 +92,7 @@ Ordem das etapas: **Configuração** (você cola o ID do projeto; é a única c�
 
 **Lote e streaming.** Lote para as tabelas históricas, que mudam uma vez por ano. Streaming para novas medições, com gravação gratuita (alguns segundos por lote). Há formas mais rápidas (cerca de 1 s), mas são cobradas.
 
-**Ausente nunca vira zero.** Roraima, sem metas em 2023 e 2024, aparece nesses anos como "sem meta" e não como meta zero. A taxa usa só alunos avaliados, com o **peso amostral**. Regras completas: [Apêndice B](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-b-regras-de-negócio).
+**Ausente nunca vira zero.** Roraima, sem metas em 2023 e 2024, aparece nesses anos como "sem meta" e não como meta zero. A taxa usa só alunos avaliados, com o **peso amostral**. Regras completas: [Apêndice B](docs/apendices.md#apêndice-b-regras-de-negócio).
 
 ## 5. Qualidade dos dados
 
@@ -107,7 +107,7 @@ Cada camada passa por uma conferência antes de a próxima ser criada. Regra **b
 
 **Execução de referência `20261024_070829`: todas as regras aprovadas no lote (88 de 88) e 34 de 34 no streaming** (6 testes das funções de qualidade e 5 da validação de eventos também passaram).
 
-**Cruzamento entre tabelas.** Quando uma linha não acha par, o BigQuery devolve vazio, sem erro. Por isso medimos quantas linhas acharam par e reprovamos abaixo de um limite definido a partir do valor medido: UF → meta, 100% (limite 100%); município → meta, 97,78% (limite 95%); alunos → resultado, 99,89% (limite 99%). Os motivos das diferenças estão no [Apêndice B](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-b-regras-de-negócio).
+**Cruzamento entre tabelas.** Quando uma linha não acha par, o BigQuery devolve vazio, sem erro. Por isso medimos quantas linhas acharam par e reprovamos abaixo de um limite definido a partir do valor medido: UF → meta, 100% (limite 100%); município → meta, 97,78% (limite 95%); alunos → resultado, 99,89% (limite 99%). Os motivos das diferenças estão no [Apêndice B](docs/apendices.md#apêndice-b-regras-de-negócio).
 
 **Falha de propósito (Etapa 7).** Uma tabela de teste recebe 3 defeitos (taxa 150, rede sem tradução, linha duplicada). A validação interrompe a célula, a falha é gravada e o alerta `[TESTE]` chega ao Discord. Os dados reais não são alterados.
 
@@ -159,7 +159,7 @@ As métricas **se acumulam**: cada execução acrescenta linhas, sem apagar as a
 - **Consultas:** só as colunas necessárias, uma partição da Bronze por vez, então o custo por execução não cresce com o histórico.
 - **Controle:** simulação de custo antes de cada gravação, teto de 5 GiB por consulta, Kafka só durante a sessão e gravação por *carga* (gratuita).
 
-**Consumo medido (execução `20261024_070829`)** ([Apêndice C](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-c-consumo-da-execução-de-referência)):
+**Consumo medido (execução `20261024_070829`)** ([Apêndice C](docs/apendices.md#apêndice-c-consumo-da-execução-de-referência)):
 
 - **Consultas:** **3,993 GiB** faturados em 147 consultas, quase tudo na tabela `alunos`. É mais que os 826,43 MB lidos nas gravações porque inclui as conferências, que releem tabelas já gravadas, e porque o BigQuery fatura no mínimo 10 MB por consulta.
 - **Cargas:** 6, gratuitas.
@@ -192,7 +192,7 @@ A projeção é um **teto**: considera o armazenamento acumulado ao fim de 12 me
 - **entradas:** taxa de 2023, proficiência média e alunos avaliados de 2023, e as metas de 2024 e 2030;
 - **alvos:** colunas com prefixo `alvo_` (taxa de 2024, variação e se atingiu a meta).
 
-**Vazamento de alvo.** As regras bloqueantes garantem que toda coluna tem um papel declarado e que só os alvos levam o prefixo `alvo_`. Além disso, conferimos que as metas de entrada já constavam da publicação de 2023, anterior ao resultado de 2024: nas 5.352 cidades presentes nas duas publicações, nenhuma meta diferiu. Isso ajuda, mas não garante: antes de treinar, é preciso selecionar as entradas e validar a disponibilidade temporal de cada uma ([Apêndice F](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-f-detalhes-da-gold-e-da-modelagem)).
+**Vazamento de alvo.** As regras bloqueantes garantem que toda coluna tem um papel declarado e que só os alvos levam o prefixo `alvo_`. Além disso, conferimos que as metas de entrada já constavam da publicação de 2023, anterior ao resultado de 2024: nas 5.352 cidades presentes nas duas publicações, nenhuma meta diferiu. Isso ajuda, mas não garante: antes de treinar, é preciso selecionar as entradas e validar a disponibilidade temporal de cada uma ([Apêndice F](docs/apendices.md#apêndice-f-detalhes-da-gold-e-da-modelagem)).
 
 **Use um alvo só.** Os três alvos derivam um do outro: `alvo_variacao_2024` é `alvo_taxa_2024 − taxa_2023`, e `alvo_atingiu_meta_2024` compara `alvo_taxa_2024` com `meta_2024`. Somando `taxa_2023` e `alvo_variacao_2024`, obtém-se `alvo_taxa_2024` sem erro. Na Fase 3, escolha um alvo e retire os outros dois das entradas; caso contrário, o modelo acerta tudo sem ter aprendido nada.
 
@@ -203,7 +203,7 @@ A projeção é um **teto**: considera o armazenamento acumulado ao fim de 12 me
 ## 10. Investigações (anomalias na fonte)
 
 1. **`meta_alfabetizacao_uf`:** o arquivo de download tinha 54 linhas e o BigQuery tem 81. Usamos o BigQuery como fonte única.
-2. **Três municípios em 2023** (Guaramiranga/CE, Groaíras/CE, Pontes e Lacerda/MT) têm taxas diferentes nas duas tabelas oficiais, e o recálculo com os alunos reproduz a tabela de meta (Groaíras: 99,15 no resultado, 83,1 na meta, 83,11 recalculado). Na rede Municipal, a Gold usa o valor confirmado e registra isso em `fonte_da_taxa`; qualquer divergência nova bloqueia a execução. A linha da rede Pública dessas cidades mantém o valor publicado. Detalhes no [Apêndice G](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-g-limitações-em-detalhe).
+2. **Três municípios em 2023** (Guaramiranga/CE, Groaíras/CE, Pontes e Lacerda/MT) têm taxas diferentes nas duas tabelas oficiais, e o recálculo com os alunos reproduz a tabela de meta (Groaíras: 99,15 no resultado, 83,1 na meta, 83,11 recalculado). Na rede Municipal, a Gold usa o valor confirmado e registra isso em `fonte_da_taxa`; qualquer divergência nova bloqueia a execução. A linha da rede Pública dessas cidades mantém o valor publicado. Detalhes no [Apêndice G](docs/apendices.md#apêndice-g-limitações-em-detalhe).
 3. **4.199 alunos (0,11%)** pertencem a recortes sem resultado publicado, quase sempre com poucos avaliados.
 4. **242 cidades-ano** têm resultado e não têm meta; **50** cidades têm meta e não têm resultado em 2023.
 5. **São Paulo não tem notas de alunos em 2023** (627 municípios), por isso a taxa recalculada do Brasil em 2023 (57,46) difere da oficial (55,90). Em 2024 as duas coincidem.
@@ -211,7 +211,7 @@ A projeção é um **teto**: considera o armazenamento acumulado ao fim de 12 me
 
 ## 11. Limitações
 
-Versão resumida; os detalhes estão no [Apêndice G](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-g-limitações-em-detalhe).
+Versão resumida; os detalhes estão no [Apêndice G](docs/apendices.md#apêndice-g-limitações-em-detalhe).
 
 - **Streaming simulado.** O Kafka roda dentro do Colab e os eventos de 2025 são inventados a partir de 2024; só a Bronze de streaming é incremental.
 - **Histórico da Bronze por dia, não por execução** ([seção 11.1](#111-política-de-histórico-da-bronze)); o "dia" segue o horário UTC.
@@ -234,7 +234,7 @@ O enunciado pede que uma execução não apague a anterior. Conferimos como o no
 | Nova execução **no mesmo dia** | A nova cópia **substitui** a anterior; fica só a última |
 | Conferências, métricas, diário e alertas (`quality_reports`) | **Sempre acumulam** |
 
-Se o notebook rodar 3 vezes no mesmo dia, só a cópia da última fica na Bronze, e as 3 execuções ficam em `quality_reports`. Escolhemos assim para manter uma única cópia por partição, evitar duplicação de dados na leitura da Silver e respeitar o limite de 10 GiB do Sandbox (cerca de 0,75 GiB por cópia), com uso previsto mensal e sem necessidade de preservar várias execuções no mesmo dia. No Sandbox, as partições expiram em 59 dias. A cópia permanente da Gold é o Parquet da Etapa 4.8. Em ambiente pago, a Bronze poderia só acrescentar cópias com retenção (proposta não implementada: [Apêndice E](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-e-guardar-todas-as-execuções-em-um-ambiente-pago-proposta)).
+Se o notebook rodar 3 vezes no mesmo dia, só a cópia da última fica na Bronze, e as 3 execuções ficam em `quality_reports`. Escolhemos assim para manter uma única cópia por partição, evitar duplicação de dados na leitura da Silver e respeitar o limite de 10 GiB do Sandbox (cerca de 0,75 GiB por cópia), com uso previsto mensal e sem necessidade de preservar várias execuções no mesmo dia. No Sandbox, as partições expiram em 59 dias. A cópia permanente da Gold é o Parquet da Etapa 4.8. Em ambiente pago, a Bronze poderia só acrescentar cópias com retenção (proposta não implementada: [Apêndice E](docs/apendices.md#apêndice-e-guardar-todas-as-execuções-em-um-ambiente-pago-proposta)).
 
 ## 12. Como executar
 
@@ -263,7 +263,7 @@ Preparo: cerca de 10 minutos, sem cartão. **Você precisa de:** uma conta Googl
 
 **O que esperar:** a **Etapa 6.0 (Kafka)** baixa 114 MB e pode levar **até 10 minutos** (aguarde "Kafka pronto"). A execução **termina em erro na Etapa 7, de propósito**. Se o ID estiver errado, a Etapa 1 para com "Não consegui usar o projeto". Se alguma célula do BigQuery der `503 ServiceUnavailable`, é uma indisponibilidade momentânea: espere alguns minutos e use **Reiniciar sessão e executar tudo**. Campos vazios na Gold são de propósito: significam "não se aplica" ou "a fonte não informou", nunca zero.
 
-Permissões, o aviso `[sandbox]` e a tabela de problemas comuns estão no [guia de execução](fiap-fase2-finalizado-3-11-main/docs/guia_de_execucao.md). Nenhuma senha ou chave está no repositório: o login é o do Colab, e a URL do webhook fica só nos Secrets.
+Permissões, o aviso `[sandbox]` e a tabela de problemas comuns estão no [guia de execução](docs/guia_de_execucao.md). Nenhuma senha ou chave está no repositório: o login é o do Colab, e a URL do webhook fica só nos Secrets.
 
 ## 13. Estrutura do repositório
 
@@ -285,25 +285,25 @@ Os arquivos de `src/` são o mesmo código do notebook, separado por camada para
 
 | Arquivo | O que mostra | Critério |
 |---|---|---|
-| [`01_console_datasets.png`](fiap-fase2-finalizado-3-11-main/evidencias/01_console_datasets.png) | Os quatro datasets no console do BigQuery | Cloud |
-| [`02_bronze_particionada.png`](fiap-fase2-finalizado-3-11-main/evidencias/02_bronze_particionada.png) | `bronze.alunos` particionada por `_ingestion_date`: 1 partição, 3.867.999 linhas | Medalhão / FinOps |
-| [`03_historico_bronze.png`](fiap-fase2-finalizado-3-11-main/evidencias/03_historico_bronze.png) | A partição diária da execução de referência: `20261024`, 3.867.999 linhas (Etapa 5.3) | Medalhão |
-| [`04_validacao_silver.png`](fiap-fase2-finalizado-3-11-main/evidencias/04_validacao_silver.png) | As 61 regras da Silver, todas aprovadas: 45 bloqueantes e 16 informativas (Etapa 3.11) | Qualidade |
-| [`05_falha_proposital.png`](fiap-fase2-finalizado-3-11-main/evidencias/05_falha_proposital.png) | A execução terminando em `ErroDeQualidade` (Etapa 7) | Qualidade |
-| [`06_alerta_discord.png`](fiap-fase2-finalizado-3-11-main/evidencias/06_alerta_discord.png) | A mensagem `[TESTE]` recebida no canal | Monitoramento |
-| [`07_diario_execucoes.png`](fiap-fase2-finalizado-3-11-main/evidencias/07_diario_execucoes.png) | Resumo da execução e histórico em `quality_reports.execucoes` (Etapa 5.1) | Monitoramento |
-| [`08_metricas_por_tabela.png`](fiap-fase2-finalizado-3-11-main/evidencias/08_metricas_por_tabela.png) | Linhas, MB lidos e duração por tabela (Etapa 5.1) | Monitoramento |
-| [`09_streaming_lotes.png`](fiap-fase2-finalizado-3-11-main/evidencias/09_streaming_lotes.png) | Os 9 lotes do streaming (Etapa 6.2) | Ingestão híbrida |
-| [`10_latencia.png`](fiap-fase2-finalizado-3-11-main/evidencias/10_latencia.png) | Latência medida e quadro lote × streaming (Etapa 6.4) | Ingestão híbrida / Monitoramento |
-| [`11_custos.png`](fiap-fase2-finalizado-3-11-main/evidencias/11_custos.png) | Consumo medido e tabela de custos (Etapa 5.2) | FinOps |
-| [`12_validacao_cruzada.png`](fiap-fase2-finalizado-3-11-main/evidencias/12_validacao_cruzada.png) | Brasil 2024: recalculada igual à oficial, 59,20 (Etapa 4.4) | Diferencial |
-| [`13_job_history.png`](fiap-fase2-finalizado-3-11-main/evidencias/13_job_history.png) | Jobs do BigQuery depois da execução; os 3 com erro são checagens de primeira execução, tratadas pelo código ([Apêndice D](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-d-notas-sobre-os-prints)) | Cloud |
-| [`14_precos_bigquery_us.pdf`](fiap-fase2-finalizado-3-11-main/evidencias/14_precos_bigquery_us.pdf) | Preços do BigQuery, região US, em 22/10/2026 (US$ 6,25/TiB; US$ 0,000027397/GiB-hora) | FinOps |
-| [`15_validacao_gold.png`](fiap-fase2-finalizado-3-11-main/evidencias/15_validacao_gold.png) | As 19 regras da Gold, com a consistência da taxa entre tabelas e o teste da exceção das 3 cidades (Etapa 4.7) | Qualidade |
-| [`16_exportacao_gold.png`](fiap-fase2-finalizado-3-11-main/evidencias/16_exportacao_gold.png) | As 6 tabelas da Gold exportadas, com manifesto e tamanhos em Parquet e CSV (Etapa 4.8) | Cloud / Fase 3 |
-| [`17_validacao_streaming.png`](fiap-fase2-finalizado-3-11-main/evidencias/17_validacao_streaming.png) | Validação do pipeline de streaming: Bronze (6.3.1), Silver (6.3.2) e Gold (6.3.3), 34 regras ao todo, e a conferência de que o simulado não entrou nas tabelas oficiais | Ingestão híbrida / Qualidade |
+| [`01_console_datasets.png`](evidencias/01_console_datasets.png) | Os quatro datasets no console do BigQuery | Cloud |
+| [`02_bronze_particionada.png`](evidencias/02_bronze_particionada.png) | `bronze.alunos` particionada por `_ingestion_date`: 1 partição, 3.867.999 linhas | Medalhão / FinOps |
+| [`03_historico_bronze.png`](evidencias/03_historico_bronze.png) | A partição diária da execução de referência: `20261024`, 3.867.999 linhas (Etapa 5.3) | Medalhão |
+| [`04_validacao_silver.png`](evidencias/04_validacao_silver.png) | As 61 regras da Silver, todas aprovadas: 45 bloqueantes e 16 informativas (Etapa 3.11) | Qualidade |
+| [`05_falha_proposital.png`](evidencias/05_falha_proposital.png) | A execução terminando em `ErroDeQualidade` (Etapa 7) | Qualidade |
+| [`06_alerta_discord.png`](evidencias/06_alerta_discord.png) | A mensagem `[TESTE]` recebida no canal | Monitoramento |
+| [`07_diario_execucoes.png`](evidencias/07_diario_execucoes.png) | Resumo da execução e histórico em `quality_reports.execucoes` (Etapa 5.1) | Monitoramento |
+| [`08_metricas_por_tabela.png`](evidencias/08_metricas_por_tabela.png) | Linhas, MB lidos e duração por tabela (Etapa 5.1) | Monitoramento |
+| [`09_streaming_lotes.png`](evidencias/09_streaming_lotes.png) | Os 9 lotes do streaming (Etapa 6.2) | Ingestão híbrida |
+| [`10_latencia.png`](evidencias/10_latencia.png) | Latência medida e quadro lote × streaming (Etapa 6.4) | Ingestão híbrida / Monitoramento |
+| [`11_custos.png`](evidencias/11_custos.png) | Consumo medido e tabela de custos (Etapa 5.2) | FinOps |
+| [`12_validacao_cruzada.png`](evidencias/12_validacao_cruzada.png) | Brasil 2024: recalculada igual à oficial, 59,20 (Etapa 4.4) | Diferencial |
+| [`13_job_history.png`](evidencias/13_job_history.png) | Jobs do BigQuery depois da execução; os 3 com erro são checagens de primeira execução, tratadas pelo código ([Apêndice D](docs/apendices.md#apêndice-d-notas-sobre-os-prints)) | Cloud |
+| [`14_precos_bigquery_us.pdf`](evidencias/14_precos_bigquery_us.pdf) | Preços do BigQuery, região US, em 22/10/2026 (US$ 6,25/TiB; US$ 0,000027397/GiB-hora) | FinOps |
+| [`15_validacao_gold.png`](evidencias/15_validacao_gold.png) | As 19 regras da Gold, com a consistência da taxa entre tabelas e o teste da exceção das 3 cidades (Etapa 4.7) | Qualidade |
+| [`16_exportacao_gold.png`](evidencias/16_exportacao_gold.png) | As 6 tabelas da Gold exportadas, com manifesto e tamanhos em Parquet e CSV (Etapa 4.8) | Cloud / Fase 3 |
+| [`17_validacao_streaming.png`](evidencias/17_validacao_streaming.png) | Validação do pipeline de streaming: Bronze (6.3.1), Silver (6.3.2) e Gold (6.3.3), 34 regras ao todo, e a conferência de que o simulado não entrou nas tabelas oficiais | Ingestão híbrida / Qualidade |
 
-Notas sobre os prints 03, 04, 07, 08, 13 e 17: [Apêndice D](fiap-fase2-finalizado-3-11-main/docs/apendices.md#apêndice-d-notas-sobre-os-prints).
+Notas sobre os prints 03, 04, 07, 08, 13 e 17: [Apêndice D](docs/apendices.md#apêndice-d-notas-sobre-os-prints).
 
 ## 15. Uso de IA
 
